@@ -1,0 +1,78 @@
+#!/usr/bin/env python
+
+import pygame
+import sys
+
+bitmap_PATH 	= 'no path declared' 
+columns 	= 0
+rows 		= 0
+FPS 		= 8
+start_row	= 1
+start_column	= 1
+finish_row	= 0
+finish_column 	= 0
+
+for i in range ( 1 , len(sys.argv)):
+	if(sys.argv[i] == '-b'):
+		bitmap_PATH = sys.argv[i+1] 
+	if(sys.argv[i] == '-c'):
+		columns = int(sys.argv[i+1])
+	if(sys.argv[i] == '-r'):
+		rows = int(sys.argv[i+1])
+	if(sys.argv[i] == '-fps'):
+		FPS = int(sys.argv[i+1])
+	if(sys.argv[i] == '-sc'):
+		start_column ==int(sys.argv[i+1])
+	if(sys.argv[i] == '-sr'):
+		start_row = int(sys.argv[i+1])
+	if(sys.argv[i] == '-fc'):
+		finish_column = int(sys.argv[i+1])
+	if(sys.argv[i] == '-fr'):
+		finish_row = int(sys.argv[i+1])
+	if(sys.argv[i] == '-h'):
+		print('\nSpritesheet Animation Tester\n\n\t-b\t= bitmap path\t(needed)\n\t-c\t= columns\t(needed)\n\t-r\t= rows\t\t(needed)\n\t-fps\t= frames per second\n\t-sc\t= start column\n\t-sr\t= start row\n\t-fc\t= finish column\n\t-fr\t= finish row\n\n')
+		sys.exit()
+	
+	
+
+if(finish_column == 0): finish_column = columns
+if(finish_row == 0): finish_row = rows
+
+bitmap = pygame.image.load(bitmap_PATH)
+
+bitmap_width = bitmap.get_rect().width
+bitmap_height = bitmap.get_rect().height
+
+column_width = bitmap_width / columns
+row_height = bitmap_height / rows
+
+column 	= start_column -1
+row 	= start_row -1
+
+clock = pygame.time.Clock()
+
+pygame.init()
+screen = pygame.display.set_mode((column_width*3,row_height*3))
+pygame.display.set_caption("Animation Test")
+
+while True:
+
+	for event in pygame.event.get():
+		if event.type == pygame.QUIT:
+			sys.exit()
+	
+	if column < finish_column-1:	
+		column += 1
+	else:
+		column = start_column-1
+		if row < finish_row-1:	row += 1
+		else: row = start_row-1
+	
+	screen.fill((255,255,255))
+	
+	screen.blit(bitmap,(column_width,row_height),(column_width*column,row_height*row,column_width,row_height))
+	
+	pygame.display.flip()
+
+	clock.tick(FPS)
+
